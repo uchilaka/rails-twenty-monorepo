@@ -61,8 +61,11 @@ To start all services defined in the root Docker Compose file:
 # View your local user account (e.g. beck)
 echo "$USER"
 
+# Set your database user
+DBUSER="${PG_DATABASE_USER:-postgres}"
+
 # View your database login user (e.g. postgres)
-echo "${PG_DATABASE_USER:-postgres}"
+echo "$DBUSER"
 
 # Check your postgres container name (e.g. twenty-db-1)
 docker compose --profile all ps -a
@@ -73,7 +76,7 @@ docker exec -it twenty-db-1 createuser --help
 # Create a role for your local user
 docker exec -it twenty-db-1 createuser \
   --createdb --no-createrole --superuser $USER \
-  --host 127.0.0.1 --username $PG_DATABASE_USER
+  --host 127.0.0.1 --username $DBUSER
 ```
 
 ### Creating a new database backup
