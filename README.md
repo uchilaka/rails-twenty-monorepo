@@ -2,11 +2,30 @@
 
 This is a monorepo for the Twenty CRM project and related packages. It uses [pnpm](https://pnpm.io/) for package management and includes Docker Compose configurations for local development.
 
+## Notes on Rails initialization
+
+The Rails app will be a demo of a servicefront with the following features:
+
+- [ ] Single sign-on via Google, Microsoft and OTP
+- [ ] A services marketing site
+- [ ] A quoting tool for new customers
+- [ ] Invoicing and payments integrated with Stripe
+
+> Clone [the Rails template repository](https://github.com/uchilaka/rails-vite-tailwindcss-template) into `~/repos/sandbox` for the following code to work
+
+```shell
+rails new servicefront --no-rc --skip-webpack-install --skip-javascript \
+  --database postgresql --skip-test --skip-system-test \
+  --active-storage --skip-action-mailbox \
+  --template ~/repos/sandbox/rails-vite-tailwindcss-template/template.rb \
+  --react --pretend
+```
+
 ## Repository Structure
 
 ```shell
 rails-twenty-monorepo/
-|── .env.development             # Sample ENV file
+|── .env.example
 |── .env.development.local       # Create this file to set ENV variables 
 ├── docker-compose.yml           # Root Docker Compose file
 ├── package.json                 # Root package.json for pnpm

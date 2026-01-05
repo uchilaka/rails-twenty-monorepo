@@ -15,16 +15,17 @@ services:
         condition: service_healthy
     profiles:
       - all
+
   server:
     image: twentycrm/twenty:${TAG:-latest}
     volumes:
       - server-local-data:/app/packages/twenty-server/.local-storage
     ports:
-      - "${CRM_SERVICE_PORT:-16016}:3000"
+      - "${CRM_SERVICE_PORT:-20016}:3000"
     restart: unless-stopped
     environment:
       NODE_PORT: 3000
-      PG_DATABASE_URL: postgres://${PG_DATABASE_USER:-postgres}:${PG_DATABASE_PASSWORD:-postgres}@${PG_DATABASE_HOST:-db}:${PG_DATABASE_PORT:-5432}/default
+      PG_DATABASE_URL: postgres://${PG_DATABASE_USER:-postgres}:${PG_DATABASE_PASSWORD:-postgres}@db:5432/${PG_DATABASE_NAME:-default}
       SERVER_URL: ${SERVER_URL}
       REDIS_URL: ${REDIS_URL:-redis://redis:6379}
       DISABLE_DB_MIGRATIONS: ${DISABLE_DB_MIGRATIONS}
@@ -80,7 +81,7 @@ services:
       - server-local-data:/app/packages/twenty-server/.local-storage
     command: ["yarn", "worker:prod"]
     environment:
-      PG_DATABASE_URL: postgres://${PG_DATABASE_USER:-postgres}:${PG_DATABASE_PASSWORD:-postgres}@${PG_DATABASE_HOST:-db}:${PG_DATABASE_PORT:-5432}/default
+      PG_DATABASE_URL: postgres://${PG_DATABASE_USER:-postgres}:${PG_DATABASE_PASSWORD:-postgres}@db:5432/${PG_DATABASE_NAME:-default}
       SERVER_URL: ${SERVER_URL}
       REDIS_URL: ${REDIS_URL:-redis://redis:6379}
       DISABLE_DB_MIGRATIONS: "true" # it already runs on the server
@@ -128,6 +129,8 @@ services:
 
   db:
     image: postgres:17
+    ports:
+      - "${PG_DATABASE_PORT:-20432}:5432"
     volumes:
       - db-data:/var/lib/postgresql/data
       - ./packages/twenty-crm/data/${RAILS_ENV:-development}/postgres/downloads:/usr/local/downloads
@@ -137,7 +140,7 @@ services:
       POSTGRES_PASSWORD: ${PG_DATABASE_PASSWORD:-postgres}
       POSTGRES_USER: ${PG_DATABASE_USER:-postgres}
     healthcheck:
-      test: pg_isready -U ${PG_DATABASE_USER:-postgres} -h localhost -d postgres
+      test: pg_isready -U ${PG_DATABASE_USER:-postgres} -h 127.0.0.1 -d ${PG_DATABASE_NAME:-default}
       interval: 5s
       timeout: 5s
       retries: 10
@@ -161,3 +164,9 @@ services:
 volumes:
   db-data:
   server-local-data:
+
+networks:
+  default:
+    name: rails-twenty-net
+    enable_ipv6: false
+    driver: bridge

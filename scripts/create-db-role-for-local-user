@@ -1,9 +1,11 @@
 #!/usr/bin/env zsh
 
+SCRIPT_DIR="$(cd "$(dirname "${0:a}")" && pwd)"
 DBUSER="${PG_DATABASE_USER:-postgres}"
 DBNAME="${PG_DATABASE_NAME:-default}"
 
 cat <<-EOF
+[Script path]:        $SCRIPT_DIR
 [Local user]:         $USER
 [Postgres username]:  $DBUSER
 [Database name]:      $DBNAME
