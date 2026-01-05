@@ -10,5 +10,6 @@ cat <<-EOF
 EOF
 
 # Make sure a role for the local user exists
-docker exec -it twenty-db-1 createuser --createdb  --no-createrole \
-  --superuser $USER --host 127.0.0.1 --username "$DBUSER"
+docker exec -it twenty-db-1 createuser \
+  --createdb  --no-createrole --superuser $USER \
+  --host 127.0.0.1 --username "$DBUSER"

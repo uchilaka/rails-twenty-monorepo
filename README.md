@@ -64,11 +64,16 @@ echo "$USER"
 # View your database login user (e.g. postgres)
 echo "${PG_DATABASE_USER:-postgres}"
 
-# Remote into the database container
-docker exec -it twenty-db-1 bash
+# Check your postgres container name (e.g. twenty-db-1)
+docker compose --profile all ps -a
+
+# View the command help menu
+docker exec -it twenty-db-1 createuser --help
 
 # Create a role for your local user
-createuser --createdb --no-createrole --superuser beck --host 127.0.0.1 --username postgres
+docker exec -it twenty-db-1 createuser \
+  --createdb --no-createrole --superuser $USER \
+  --host 127.0.0.1 --username $PG_DATABASE_USER
 ```
 
 ### Creating a new database backup
