@@ -3,7 +3,7 @@
 RAILS_ENV="${RAILS_ENV:-development}"
 # Working script for creating a PostgreSQL database dump for the primary
 # database of the CAMI Rails application.
-BACKUP_PATH="db/${RAILS_ENV}/postgres/downloads"
+BACKUP_PATH="packages/twenty-crm/data/${RAILS_ENV}/postgres/downloads"
 mkdir -p "$BACKUP_PATH"
 MOUNTED_BACKUP_PATH="/usr/local/downloads"
 BACKUP_FILE="${MOUNTED_BACKUP_PATH}/twenty-crm-$(date +'%Y%m%d.%H%M%S%z').dump"
