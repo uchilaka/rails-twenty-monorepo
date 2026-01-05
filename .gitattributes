@@ -1,0 +1,23 @@
+# Ensure this file is NOT encrypted
+.gitattributes !filter !diff
+
+# Rails credentials
+**/config/credentials/*.yml.enc diff=rails_credentials
+**/config/credentials.yml.enc diff=rails_credentials
+
+# Encrypt sensitive files using git-crypt
+.env.* filter=git-crypt diff=git-crypt
+
+# Skip encryption for non-sensitive environment files
+.env.example !filter !diff
+
+# Encrypt database backups
+packages/**/postgres/**/*.dump filter=git-crypt diff=git-crypt
+packages/**/postgres/**/*.sql filter=git-crypt diff=git-crypt
+
+# Skip encryption for sample database backups
+packages/**/postgres/**/downloads/*-sample.dump !filter !diff
+
+# Identify the Yarn releases and plugin bundles as binary
+.yarn/releases/** binary
+.yarn/plugins/** binary

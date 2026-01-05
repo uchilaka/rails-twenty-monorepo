@@ -1,28 +1,33 @@
 # rails-twenty-monorepo
 
-This is a monorepo concept for a Rails project, integrated with an instance of the Twenty CRM and managed with pnpm workspaces. It contains multiple packages and scripts for development, testing, and deployment.
+This is a monorepo for the Twenty CRM project and related packages. It uses [pnpm](https://pnpm.io/) for package management and includes Docker Compose configurations for local development.
 
-## Project Structure
+## Repository Structure
 
-- `docker-compose.yml` — Top-level Docker Compose configuration for the monorepo.
-- `package.json` — Root package configuration, including workspace settings.
-- `pnpm-workspace.yaml` — pnpm workspace configuration file.
-- `packages/` — Contains all project packages.
-  - `twenty-crm/` — Example package (CRM service), may contain its own `docker-compose.yml` and codebase.
-- `scripts/` — Utility scripts for managing the monorepo.
-  - `list` — List packages or services.
-  - `start` — Start services or development environment.
-  - `teardown` — Stop and clean up services.
+```shell
+rails-twenty-monorepo/
+|── .env.development             # Sample ENV file
+|── .env.development.local       # Create this file to set ENV variables 
+├── docker-compose.yml           # Root Docker Compose file
+├── package.json                 # Root package.json for pnpm
+├── pnpm-workspace.yaml          # pnpm workspace configuration
+├── README.md                    # This file
+└── packages/
+    └── twenty-crm/
+        ├── .env                # Service-specific ENV file
+        └── data/
+            └── development/
+                └── postgres/
+                    └── downloads/
+```
 
 ## Getting Started
 
-The Twenty container uses port `16016` by default.
-
 ### Prerequisites
 
-- [Node.js](https://nodejs.org/) (recommended: latest LTS)
-- [pnpm](https://pnpm.io/) (for workspace management)
-- [Docker](https://www.docker.com/) (for running services)
+-- [Node.js](https://nodejs.org/) (recommended: latest LTS)
+-- [pnpm](https://pnpm.io/) (for workspace management)
+-- [Docker Compose](https://docs.docker.com/compose/) (for running services)
 
 ### Install Dependencies
 
@@ -30,45 +35,65 @@ The Twenty container uses port `16016` by default.
 pnpm install
 ```
 
+### Setting up `direnv`
+
+When the `direnv` library is working correctly, the output resemples this after `cd` into the project root:
+
+```shell
+direnv: loading ~/repos/sandbox/rails-twenty-monorepo/.envrc
+🛠️ Loading /Users/uche/repos/sandbox/rails-twenty-monorepo/.env.development
+🛠️ Loading /Users/uche/repos/sandbox/rails-twenty-monorepo/.env.development.local
+🛠️ Loading /Users/uche/repos/sandbox/rails-twenty-monorepo/packages/twenty-crm/.env
+direnv: export +APP_SECRET +CRM_SERVICE_PORT +NODENV_VERSION +PG_DATABASE_PASSWORD +PROJECT_ROOT +RAILS_ENV +SERVER_URL +STORAGE_TYPE +TAG
+```
+
 ### Running Services
 
-To start all services using Docker Compose:
+To start all services defined in the root Docker Compose file:
 
 ```shell
-docker-compose up
+.docker/bin/start
 ```
 
-Or use the provided scripts in the `scripts/` directory:
+### Setting up the local user role
 
 ```shell
-./scripts/start
+# View your local user account (e.g. beck)
+echo "$USER"
+
+# View your database login user (e.g. postgres)
+echo "${PG_DATABASE_USER:-postgres}"
+
+# Remote into the database container
+docker exec -it twenty-db-1 bash
+
+# Create a role for your local user
+createuser --createdb --no-createrole --superuser beck --host 127.0.0.1 --username postgres
 ```
 
-### Stopping Services
+### Creating a new database backup
 
 ```shell
-./scripts/stop
+scripts/backup
 ```
 
-Or:
+### Restoring from the database backup
 
-```shell
-./scripts/teardown
-```
+You should be able to access the app after performing a DB restore with the following credentials:
 
-### Listing Packages/Services
+- username: `developer@fake.email`
+- password: `Test1234`
 
-```shell
-./scripts/list
-```
+After a successful login, you should have a "Acme Inc." company.
 
-## Contributing
+## Workspace Packages
 
-1. Fork the repository and create your branch from `main`.
-2. Make your changes and add tests if applicable.
-3. Commit your changes and push your branch.
-4. Open a pull request.
+- `packages/twenty-crm/`: Main CRM application and related resources.
 
-## License
+## Notes
 
-This project is licensed under the MIT License.
+- A local Postgres resource directory for the `development` environment is mounted from `packages/twenty-crm/data/development/postgres/downloads/`. This can be used to load files into the postgres container
+- Add additional packages under the `packages/` directory as needed.
+
+---
+For more details, see individual package README files (if present).

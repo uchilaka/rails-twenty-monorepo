@@ -1,2 +1,19 @@
-!/packages/twenty-crm/data/**/*/downloads/.keep
-/packages/twenty-crm/data/**/*/downloads
+/packages/twenty-crm/data/**/downloads
+!/packages/twenty-crm/data/**/downloads/.keep
+!/packages/twenty-crm/data/**/downloads/twenty-crm-backup-sample.dump
+
+# JS stuff
+**/node_modules
+
+# Environment files
+**/.env.*.local
+/.node-version
+
+# Yarn
+.pnp.*
+.yarn/*
+!.yarn/patches
+!.yarn/plugins
+!.yarn/releases
+!.yarn/sdks
+!.yarn/versions

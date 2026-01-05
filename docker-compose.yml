@@ -1,6 +1,20 @@
 name: twenty
 
 services:
+  adminer:
+    image: adminer
+    restart: unless-stopped
+    ports:
+      - "16061:8080"
+    links:
+      - db:db
+    environment:
+      ADMINER_DEFAULT_SERVER: db
+    depends_on:
+      db:
+        condition: service_healthy
+    profiles:
+      - all
   server:
     image: twentycrm/twenty:${TAG:-latest}
     volumes:
@@ -113,10 +127,10 @@ services:
       - essential
 
   db:
-    image: postgres:16
+    image: postgres:17
     volumes:
       - db-data:/var/lib/postgresql/data
-      - ./packages/twenty-crm/data/${NODE_ENV:-development}/postgres/downloads:/usr/local/downloads
+      - ./packages/twenty-crm/data/${RAILS_ENV:-development}/postgres/downloads:/usr/local/downloads
     restart: unless-stopped
     environment:
       POSTGRES_DB: ${PG_DATABASE_NAME:-default}
