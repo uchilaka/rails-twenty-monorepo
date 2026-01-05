@@ -10,6 +10,8 @@ BACKUP_FILE="${MOUNTED_BACKUP_PATH}/twenty-crm-$(date +'%Y%m%d.%H%M%S%z').dump"
 DBUSER="${PG_DATABASE_USER:-postgres}"
 DBNAME="${PG_DATABASE_NAME:-default}"
 
+exec "$SCRIPT_DIR/create-db-role-for-local-user"
+
 cat <<-EOF
 [Local user]:         $USER
 [Postgres username]:  $DBUSER
