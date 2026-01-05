@@ -1,0 +1,14 @@
+{
+  "folders": [
+    {
+      "path": "."
+    },
+    {
+      "path": "packages/servicefront"
+    },
+    {
+      "path": "packages/twenty-crm"
+    }
+  ],
+  "settings": {}
+}
