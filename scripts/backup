@@ -1,27 +1,24 @@
 #!/usr/bin/env zsh
 
+RAILS_ENV="${RAILS_ENV:-development}"
 # Working script for creating a PostgreSQL database dump for the primary
 # database of the CAMI Rails application.
 BACKUP_PATH="db/${RAILS_ENV}/postgres/downloads"
 mkdir -p "$BACKUP_PATH"
 MOUNTED_BACKUP_PATH="/usr/local/downloads"
 BACKUP_FILE="${MOUNTED_BACKUP_PATH}/twenty-crm-$(date +'%Y%m%d.%H%M%S%z').dump"
-USERNAME="${PG_DATABASE_USER:-postgres}"
+DBUSER="${PG_DATABASE_USER:-postgres}"
 DBNAME="${PG_DATABASE_NAME:-default}"
 
 cat <<-EOF
 [Local user]:         $USER
-[Postgres username]:  $USERNAME
+[Postgres username]:  $DBUSER
 [Database name]:      $DBNAME
 [Backup file]:        $BACKUP_FILE
 EOF
 
-# Make sure a role for the local user exists
-docker exec -it twenty-db-1 createuser --createdb  --no-createrole \
-  --superuser $USER --host 127.0.0.1 --username "$USERNAME"
-
 # Dump CRM database
 docker exec -it twenty-db-1 pg_dump --format=c --no-owner \
   --no-privileges --verbose --encoding=UTF-8 \
-  --username "$USERNAME" --host 127.0.0.1  \
+  --username "$DBUSER" --host 127.0.0.1  \
   --file "$BACKUP_FILE" $DBNAME

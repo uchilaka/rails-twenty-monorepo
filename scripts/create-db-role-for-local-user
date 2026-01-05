@@ -1,0 +1,14 @@
+#!/usr/bin/env zsh
+
+DBUSER="${PG_DATABASE_USER:-postgres}"
+DBNAME="${PG_DATABASE_NAME:-default}"
+
+cat <<-EOF
+[Local user]:         $USER
+[Postgres username]:  $DBUSER
+[Database name]:      $DBNAME
+EOF
+
+# Make sure a role for the local user exists
+docker exec -it twenty-db-1 createuser --createdb  --no-createrole \
+  --superuser $USER --host 127.0.0.1 --username "$DBUSER"
