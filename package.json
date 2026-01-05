@@ -7,10 +7,10 @@
   },
   "main": "index.js",
   "scripts": {
-    "keys:gpg-list": "gpg --list-secret-keys --keyid-format LONG",
-    "keys:status": "git-crypt status -e",
-    "keys:lock": "git-crypt lock",
-    "keys:unlock": "git-crypt unlock $GITCRYPT_KEY_FILE",
+    "gpg:keys:list": "gpg --list-secret-keys --keyid-format LONG",
+    "gpg:keys:status": "git-crypt status -e",
+    "gpg:keys:lock": "git-crypt lock",
+    "gpg:keys:unlock": "git-crypt unlock $GITCRYPT_KEY_FILE",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "workspaces": [
