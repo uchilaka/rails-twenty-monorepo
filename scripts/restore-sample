@@ -1,0 +1,10 @@
+#!/usr/bin/env zsh
+
+MOUNTED_BACKUP_PATH="/usr/local/downloads"
+BACKUP_FILE="${MOUNTED_BACKUP_PATH}/twenty-crm-backup-sample.dump"
+USERNAME="${PG_DATABASE_USER:-postgres}"
+DBNAME="${PG_DATABASE_NAME:-default}"
+
+docker exec -it twenty-db-1 pg_restore --jobs 8 --clean --verbose \
+  --username="$USERNAME" --host=127.0.0.1 --dbname="$DBNAME" \
+  --password "$BACKUP_FILE"
