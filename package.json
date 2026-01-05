@@ -35,6 +35,7 @@
     "eslint-config-prettier": "^10.1.8",
     "eslint-plugin-prettier": "^5.5.4",
     "eslint-plugin-react": "^7.37.5",
+    "markdownlint": "^0.40.0",
     "path": "^0.12.7",
     "prettier": "^3.7.4",
     "vite-plugin-full-reload": "^1.2.0",
