@@ -1,0 +1,11 @@
+default: true
+
+extends: null
+
+first-line-h1: false
+
+line-length:
+  strict: false
+  heading_line_length: 80
+  code_block_line_length: 100
+  line_length: 120
